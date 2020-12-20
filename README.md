@@ -2,7 +2,7 @@
 
 A Clojure library for creating computational artwork. Inspired by [thobbs/genartlib](https://github.com/thobbs/genartlib) and created as a supplement.
 
-This is not published, yet.
+This is not published, yet. See also [artlib-core](https://github.com/sdedovic/artlib-cuda).
 
 ## Contents 
 ### midi
