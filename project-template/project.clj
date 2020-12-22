@@ -7,4 +7,5 @@
              "-server"
              "-Dsun.java2d.uiScale=1.0"] ; adjust scaling for high DPI displays
   :source-paths ["src/clj"]
-  :java-source-paths ["src/java"])
+  :java-source-paths ["src/java"]
+  :resource-paths ["resources"])
