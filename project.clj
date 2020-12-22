@@ -4,6 +4,7 @@
   :license {:name "MIT"
             :url "https://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.10.1"]
+                 [progrock "0.1.2"]
                  [quil "3.1.0"]]
   :source-paths ["src/clj"]
   :java-source-paths ["src/java"]

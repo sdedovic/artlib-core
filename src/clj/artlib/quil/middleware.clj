@@ -1,10 +1,12 @@
 (ns artlib.quil.middleware
   (:require [clojure.java.shell :refer [sh]]
             [quil.core :as q]
-            [artlib.quil.global :refer :all])
+            [artlib.quil.global :refer :all]
+            [progrock.core :as pr])
   (:import (java.text SimpleDateFormat)
            (java.util Date)))
 
+(def progress (atom nil))
 
 (defn- now
   "Gets the current system time as a file friendly prefix."
@@ -57,7 +59,9 @@
         (if render?
           (let [frame (:frame state)
                 folder (str "output/tmp/" dirname "/")]
-            (q/save (str folder frame ".png")))
+            (swap! progress pr/tick 1)
+            (q/save (str folder frame ".png"))
+            (pr/print @progress))
           (let [frame (:frame state)
                 framerate (q/current-frame-rate)
                 time-elapsed (/ frame framerate)]
@@ -90,6 +94,7 @@
         length (:length animation-opts 300)
         render? (:render? animation-opts false)
         dirname (:dirname animation-opts "0001")]
+    (reset! progress (pr/progress-bar length))
     (-> options
         (update :draw wrap-draw size dirname framerate length render?)
         (update :setup wrap-setup framerate render?)
