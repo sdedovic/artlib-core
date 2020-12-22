@@ -1,7 +1,7 @@
 (ns artlib.quil.middleware
   (:require [clojure.java.shell :refer [sh]]
             [quil.core :as q]
-            [artlib.quil.globals :refer :all])
+            [artlib.quil.global :refer :all])
   (:import (java.text SimpleDateFormat)
            (java.util Date)))
 
