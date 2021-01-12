@@ -6,11 +6,10 @@
 
 (q/defsketch example
              :title "Sketch"
-             :setup dynamic/setup
+             :setup (fn [] {})
              :draw dynamic/draw
-             :update dynamic/update-state
+             :update identity
              :size [1400 1400]
              :animation {:render? false :dirname "EXAMPLE/1"}
-             :middleware [qm/fun-mode animation-mode ])
-
+             :middleware [qm/fun-mode animation-mode])
 
