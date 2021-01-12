@@ -1,4 +1,4 @@
-(defproject sdedovic/artlib-core "0.0.1-SNAPSHOT"
+(defproject com.dedovic/artlib-core "0.0.1-SNAPSHOT"
   :description "Utilities for making generative art"
   :url "https://github.com/sdedovic/artlib-core"
   :license {:name "MIT"
