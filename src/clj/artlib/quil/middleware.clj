@@ -82,7 +82,7 @@
   (fn [old-state]
     (if render?
       (update (update-fn old-state) :frame inc)
-      (if (> (:frame old-state) length)
+      (if (>= (:frame old-state) length)
         (assoc (update-fn old-state) :frame 0)
         (update (update-fn old-state) :frame inc)))))
 
