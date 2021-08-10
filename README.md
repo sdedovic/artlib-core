@@ -5,6 +5,9 @@ A Clojure library for creating computational artwork. Inspired by [thobbs/genart
 This is not published, yet. See also [artlib-core](https://github.com/sdedovic/artlib-cuda).
 
 ## Contents 
+### 3d
+- **`3d.native`** - 3D projection a la OpenGL and GLM. Backed by `vectorz-clj` and runs on the CPU.
+
 ### midi
 - **`midi.core`** - low level access to .mid files
 - **`midi.data`** - higher-level, more useful access to .mid file data
