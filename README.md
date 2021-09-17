@@ -9,6 +9,9 @@ Very expiremental. See also [artlib-cuda](https://github.com/sdedovic/artlib-cud
 ### 3d
 - **`3d.native`** - 3D projection a la OpenGL and GLM. Backed by `vectorz-clj` and runs on the CPU.
 
+### keyframing
+-**`keyframea.core`** - basic keyframing
+
 ### midi
 - **`midi.core`** - low level access to .mid files
 - **`midi.data`** - higher-level, more useful access to .mid file data
