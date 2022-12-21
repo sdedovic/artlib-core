@@ -1,8 +1,8 @@
 (defproject com.dedovic/artlib-core "0.0.5-SNAPSHOT"
   :description "Utilities for making generative art"
   :url "https://github.com/sdedovic/artlib-core"
-  :license {:name "MIT"
-            :url "https://opensource.org/licenses/MIT"}
+  :license {:name "Apache License, Version 2.0"
+            :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [net.mikera/vectorz-clj "0.48.0"]
                  [progrock "0.1.2"]

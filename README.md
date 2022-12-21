@@ -9,8 +9,14 @@ Very expiremental. See also [artlib-cuda](https://github.com/sdedovic/artlib-cud
 ### 3d
 - **`3d.native`** - 3D projection a la OpenGL and GLM. Backed by `vectorz-clj` and runs on the CPU.
 
+### color
+- **`color.palettes`** - oscillating color palletes and color pallete generator
+
+### geometry
+- **`geometry.jts`** - tools for offsetting and insetting arbitrary polygons, wrapper around JTS
+
 ### keyframing
--**`keyframea.core`** - basic keyframing
+- **`keyframea.core`** - basic keyframing
 
 ### midi
 - **`midi.core`** - low level access to .mid files
