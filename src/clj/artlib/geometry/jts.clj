@@ -1,6 +1,5 @@
 (ns artlib.geometry.jts
-  (:import (org.locatio                                     ;;;;;ntech.jts.geom GeometryFactory Coordinate Polygon Geometry
-             )
+  (:import (org.locationtech.jts.geom GeometryFactory Coordinate Polygon Geometry)
            (org.locationtech.jts.operation.buffer BufferParameters)))
 
 (defn ^Polygon ->Polygon
@@ -30,7 +29,9 @@
 
 (defn offset
   "Perform a polygon offsetting operation on the supplied seq of points.
-    Returns an open shape if supplied, or closed shape if supplied.",
+    Returns an open shape if supplied, or closed shape if supplied."
+  {:test #(let [poly [[-1.0 -1.0] [-1.0 1.0] [1.0 1.0] [1.0 -1.0]]]
+            (assert (= (offset poly -0.1) [[-0.9 -0.9] [-0.9 0.9] [0.9 0.9] [0.9 -0.9]]))) }
   [polygon amt]
   (let [offset-closed (fn [closed-poly]
                         (let [shell (->Polygon closed-poly)
