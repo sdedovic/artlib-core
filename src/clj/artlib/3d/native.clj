@@ -36,10 +36,11 @@
   ([fov aspect-ratio near-plane far-plane]
    (let [n (/ 1.0 (Math/tan (/ fov 2.0)))
          num-9 (/ n aspect-ratio)
+         sum (+ near-plane far-plane)
          diff (- near-plane far-plane)]
      [[num-9 0 0 0]
       [0     n 0 0]
-      [0     0 (/ far-plane diff) (/ (* near-plane far-plane) diff)]
+      [0     0 (/ sum diff) (/ (* 2 near-plane far-plane) diff)]
       [0     0 -1 0]])))
 
 (defn look-at 
