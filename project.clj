@@ -3,7 +3,7 @@
   :url "https://github.com/sdedovic/artlib-core"
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
-  :dependencies [[org.clojure/clojure "1.10.1"]
+  :dependencies [[org.clojure/clojure "1.12.0-alpha1"]
                  [net.mikera/vectorz-clj "0.48.0"]
                  [progrock "0.1.2"]
                  [quil "4.0.0-SNAPSHOT-1"]

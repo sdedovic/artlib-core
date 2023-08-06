@@ -1,3 +1,5 @@
+;; See: https://github.com/g-truc/glm
+
 (ns artlib.3d.native
   (:require [clojure.core.matrix :refer [cross dot mmul select distance normalise]]
             [clojure.core.matrix.operators :refer :all]
@@ -11,37 +13,60 @@
    [0 0 1 0] 
    [0 0 0 1]])
 
-(defn translate 
-  "Translate the matrix. Returns a new matrix."
-  [matrix [x y z]]
+(defn glm-translate
+  "Builds a translation 4 * 4 matrix created from a vector of 3 components.
+  matrix - Input matrix multiplied by this translation matrix.
+  v - Coordinates of a translation vector."
+  [matrix [x y z :as v]]
   (let [transform [[1 0 0 x]
                    [0 1 0 y]
                    [0 0 1 z]
                    [0 0 0 1]]]
     (mmul matrix transform)))
 
+(defn ^:deprecated translate 
+  "Use glm-translate instead."
+  [matrix v]
+  (glm-translate matrix v))
+
 (defn glm-scale
-  "Scale the matrix. Returns a new matrix."
-  [matrix [x y z]]
+  "Builds a scale 4 * 4 matrix created from 3 scalars.
+  matrix - Input matrix multiplied by this scale matrix.
+  v - Ratio of scaling for each axis."
+  [matrix [x y z :as v]]
   (let [transform [[x 0 0 0]
                    [0 y 0 0]
                    [0 0 z 0]
                    [0 0 0 1]]]
     (mmul matrix transform)))
 
+(defn glm-rotate
+  "Builds a rotation 4 * 4 matrix created from an axis vector and an angle.
+  matrix - Input matrix multiplied by this rotation matrix.
+  angle - Rotation angle expressed in radians.
+  axis - Rotation axis, normalized."
+  [matrix angle [x y z :as axis]]
+  (let [c (Math/cos angle)
+        s (Math/sin angle)
+        cc (- 1 c)
+        transform [[(+ (* x x cc) c)        (- (* y x cc) (* z s))  (+ (* z x cc) (* y s))  0]
+                   [(+ (* x y cc) (* z s))  (+ (* y y cc) c)        (- (* z y cc) (* x s))  0]
+                   [(- (* x z cc) (* y s))  (+ (* y z cc) (* x s))  (+ (* z z cc) c)        0]
+                   [0                       0                       0                       1]]]
+    (mmul matrix transform)))
+
 (defn perspective-fov 
-  "Create a perpective projection matrix. FOV is in radians."
+  "Create a perpective projection matrix. FOV is in radians.
+  See: mat4#perspective https://glmatrix.net/docs/mat4.js.html"
   ([]
-   (perspective-fov (* 1/2 Math/PI) 1.0 0.1 100))
-  ([fov aspect-ratio near-plane far-plane]
-   (let [n (/ 1.0 (Math/tan (/ fov 2.0)))
-         num-9 (/ n aspect-ratio)
-         sum (+ near-plane far-plane)
-         diff (- near-plane far-plane)]
-     [[num-9 0 0 0]
-      [0     n 0 0]
-      [0     0 (/ sum diff) (/ (* 2 near-plane far-plane) diff)]
-      [0     0 -1 0]])))
+   (perspective-fov (* 1/2 Math/PI) 1.0 0.1 10))
+  ([fovy aspect-ratio near-plane far-plane]
+   (let [f (/ 1.0 (Math/tan (/ fovy 2.0)))
+         nf (/ 1.0 (- near-plane far-plane))]
+     [[(/ f aspect-ratio) 0 0 0]
+      [0 f 0 0]
+      [0 0 (* (+ far-plane near-plane) nf) (* 2 far-plane near-plane nf)]
+      [0 0 -1 0]])))
 
 (defn look-at 
   "Create a view matrix."
@@ -60,12 +85,11 @@
       [0             0             0             1]])))
 
 (defn project 
-  "Convenience function to perform vertex projection. Result will have a Z value.
-    Equivalent to: Vout = Mproject * Mview* Mmodel * Vin"
-  [projection view model [x y z]] 
+  "Convenience function to perform vertex transformation. Performs viewport transformation and perspective division, 
+    i.e. divides by the w value and normalizes to [0, 1]."
+  [projection view model [x y z :as point]] 
   (let [[x y z w] (mmul projection view model [x y z 1])
         x (+ 0.5 (* 0.5 (/ x w)))
         y (- 0.5 (* 0.5 (/ y w)))
-        z (- 0.5 (* 0.5 (/ z w)))] 
-    [x y z]))
-
+        z (/ z w)] 
+    (with-meta [x y z] (meta point))))
