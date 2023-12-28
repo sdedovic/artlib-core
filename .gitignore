@@ -12,4 +12,10 @@ pom.xml.asc
 /.prepl-port
 .hgignore
 .hg/
+
+# intellij
 .idea/
+
+# direnv
+.envrc
+.direnv/
