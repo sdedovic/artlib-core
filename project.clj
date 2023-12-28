@@ -11,8 +11,19 @@
                  ; serde
                  [org.clojure/data.json "2.4.0"]
                  [org.locationtech.jts/jts-core "1.18.1"]]
-  :deploy-repositories [["releases"  {:sign-releases false :url "https://clojars.org"}]
-                        ["snapshots" {:sign-releases false :url "https://clojars.org"}]]
+  :release-tasks [["vcs" "assert-committed"]
+                  ["change" "version"
+                   "leiningen.release/bump-version" "release"]
+                  ["vcs" "commit"]
+                  ["vcs" "tag" "--no-sign"] ;; TODO: start signing things
+                  ["deploy"]
+                  ["change" "version" "leiningen.release/bump-version"]
+                  ["vcs" "commit"]
+                  ["vcs" "push"]]
+  :deploy-repositories [["releases"  {:sign-releases false 
+                                      :url "https://clojars.org/repo"
+                                      :username :env/clojars_user
+                                      :password :env/clojars_token}]]
   :source-paths ["src/clj"]
   :test-paths ["test/clj"]
   :java-source-paths ["src/java"]
