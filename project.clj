@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.12.0-alpha1"]
                  [net.mikera/vectorz-clj "0.48.0"]
                  [progrock "0.1.2"]
-                 [quil "4.0.0-SNAPSHOT-1"]
+                 [quil "4.3.1323"]
 
                  ; serde
                  [org.clojure/data.json "2.4.0"]
