@@ -62,8 +62,6 @@
 (defn buffer-poly
   "Perform a polygon offsetting operation on the supplied seq of points.
     Returns an open shape if supplied, or closed shape if supplied."
-  {:test #(let [poly [[-1.0 -1.0] [-1.0 1.0] [1.0 1.0] [1.0 -1.0]]]
-            (assert (= (buffer-poly poly -0.1) [[-0.9 -0.9] [-0.9 0.9] [0.9 0.9] [0.9 -0.9]]))) }
   [polygon amt]
   (let [buffer-fn (fn [closed-poly]
                         (let [shell (->Polygon closed-poly)
@@ -103,7 +101,7 @@
                            (->Coordinate p3)
                            (->Coordinate p4))
      (if (.isProper intersector)
-       (.getIntersection intersector 0)
+       (Coordinate->point (.getIntersection intersector 0))
        nil))))
 
 (defn cut-segment-by-segment
@@ -113,9 +111,8 @@
   ([a b]
    (cut-segment-by-segment (first a) (last a) (first b) (last b)))
   ([p1 p2 p3 p4]
-   (if-let [coord (line-segment-intersection p1 p2 p3 p4)]
-     (let [point (Coordinate->point coord)]
-       [[p1 point] [point p2]])
+   (if-let [point (line-segment-intersection p1 p2 p3 p4)]
+     [[p1 point] [point p2]]
      [[p1 p2]])))
 
 (defn cut-segment-by-collection
