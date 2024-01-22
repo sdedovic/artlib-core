@@ -1,21 +1,14 @@
 (ns artlib.geometry.jts
   (:import (org.locationtech.jts.geom GeometryFactory Coordinate Polygon Geometry)
+           (org.locationtech.jts.algorithm RobustLineIntersector)
            (org.locationtech.jts.operation.buffer BufferParameters)))
-
-(defn ^Polygon ->Polygon
-  "Convert the supplied points to a JTS Polygon.
-    The input seq must be closed, i.e. first and last points are the same.",
-  [points]
-  (let [shell (into-array Coordinate (map ->Coordinate points))
-        factory (GeometryFactory.)]
-    (.createPolygon factory shell)))
 
 (defn ^Coordinate ->Coordinate
   "Converts the paremeters to a Coordinate. Calling with a single argument
     treats the value as a vector. Calling with two or more treats the
     arguments as elements."
   ([elements]
-   (apply Coordinate. (map double elements)))
+   (apply ->Coordinate elements))
   ([x y]
    (Coordinate. (double x) (double y)))
   ([x y z]
@@ -24,14 +17,10 @@
 (defn Coordinate->point
   "Convert the Coordinate to a vec of its elements/"
   [^Coordinate coord]
-  (if (== (.getZ coord) (Coordinate/NULL_ORDINATE))
+  ;; .equals for ##NaN becuase Clojure will never =, == ##NaN
+  (if (.equals (.getZ coord) Coordinate/NULL_ORDINATE)
     [(.getX coord) (.getY coord)]
     [(.getX coord) (.getY coord) (.getZ coord)]))
-
-(defn Geometry->points
-  "Convert the supplied JTS Geometry to a point seq."
-  [^Geometry geom]
-  (map Coordinate->point (seq (.getCoordinates geom))))
 
 (defn- repair
   "Closes the points if they are not closed,
@@ -41,6 +30,32 @@
     points
     (concat points [(first points)])))
 
+(defn ^Polygon ->Polygon
+  "Convert the supplied points to a Polygon, potentially closing
+    the original points. A 'closed' Polygon has the same first and
+    last point."
+  [points]
+  (let [coords (->> points
+                    repair
+                    (map ->Coordinate)
+                    into-array)
+        factory (GeometryFactory.)]
+    (.createPolygon factory coords)))
+
+(defn Geometry->points
+  "Convert the supplied JTS Geometry to a point seq. The optional argument 'as'
+    supports values of :open or :closed and will drop or keep the last point,
+    respectively. The default is :closed. This is due to JTS Polygons always
+    being closed."
+  ([^Geometry geom]
+   (Geometry->points geom :closed))
+  ([^Geometry geom as]
+   (let [points (map Coordinate->point (.getCoordinates geom))]
+     (if (= as :open)
+       (drop-last points)
+       points))))
+
+
 ;; TODO(2024-1-21): move methods below this comment to a different 
 ;;  namespace as they are implmentation-agnostic and general purpose.
 
@@ -48,7 +63,7 @@
   "Perform a polygon offsetting operation on the supplied seq of points.
     Returns an open shape if supplied, or closed shape if supplied."
   {:test #(let [poly [[-1.0 -1.0] [-1.0 1.0] [1.0 1.0] [1.0 -1.0]]]
-            (assert (= (offset poly -0.1) [[-0.9 -0.9] [-0.9 0.9] [0.9 0.9] [0.9 -0.9]]))) }
+            (assert (= (buffer-poly poly -0.1) [[-0.9 -0.9] [-0.9 0.9] [0.9 0.9] [0.9 -0.9]]))) }
   [polygon amt]
   (let [buffer-fn (fn [closed-poly]
                         (let [shell (->Polygon closed-poly)
@@ -98,9 +113,9 @@
   ([a b]
    (cut-segment-by-segment (first a) (last a) (first b) (last b)))
   ([p1 p2 p3 p4]
-   (if-let [coord (line-segment-intersection p1 p2 p3 p4)
-            point (Coordinate->point coord)]
-     [[p1 point] [point p2]]
+   (if-let [coord (line-segment-intersection p1 p2 p3 p4)]
+     (let [point (Coordinate->point coord)]
+       [[p1 point] [point p2]])
      [[p1 p2]])))
 
 (defn cut-segment-by-collection
