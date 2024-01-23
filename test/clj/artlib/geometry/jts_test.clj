@@ -122,3 +122,27 @@
         b (jts/cut-segment-by-segment [0 7] [6 25] [0 9] [8 25])]
     (is (= a [[[0 0] [1 0]]]))
     (is (= b [[[0 7] [2.0 13.0]] [[2.0 13.0] [6 25]]]))))
+
+(deftest cut-segment-by-collection
+  (let [a [[0 0] [9 0]]
+        b [[0 1] [9 1]]
+        c [[0 2] [9 2]]
+        d [[0 3] [9 3]]
+        v [[5 -5] [5 5]]]
+
+    ; cutting by empty coll yields list of original segment
+    (is (= [a] (jts/cut-segment-by-collection a [])))
+
+    ; cutting by coll of self yields list of original segment
+    (is (= [a] (jts/cut-segment-by-collection a [a])))
+
+    ; cutting by non-intersecting yields list of original segment
+    (is (= [a] (jts/cut-segment-by-collection a [b c d])))
+
+    ; basic cutting example
+    (is (= [[[5 -5] [5.0 0.0]]
+            [[5.0 0.0] [5.0 1.0]]
+            [[5.0 1.0] [5.0 2.0]]
+            [[5.0 2.0] [5.0 3.0]]
+            [[5.0 3.0] [5 5]]]
+          (jts/cut-segment-by-collection v [a b c d])))))
