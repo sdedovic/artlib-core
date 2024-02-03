@@ -23,5 +23,4 @@
     (is (eq-veci [0 0 0] (dictionary/get-color-hsb dict "black")))
     (is (eq-veci [0 0 100] (dictionary/get-color-hsb dict "white")))
     (is (eq-veci [46 100 31] (dictionary/get-color-hsb dict "sepia")))
-    (is (eq-veci [60 100 100] (dictionary/get-color-hsb dict "yellow")))
-    ))
+    (is (eq-veci [60 100 100] (dictionary/get-color-hsb dict "yellow")))))

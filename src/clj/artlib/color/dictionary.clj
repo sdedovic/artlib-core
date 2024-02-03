@@ -27,10 +27,10 @@
           (.add entries color))))
     (apply hash-map 
            (mapcat (fn [entry]
-                  (let [k (keyword (str (.getKey entry)))
-                        v (into [] (.getValue entry))]
-                    [k v])) 
-                combinations))))
+                     (let [k (keyword (str (.getKey entry)))
+                           v (into [] (.getValue entry))]
+                       [k v])) 
+                   combinations))))
 (defn 
   init
   "Load the color dictionary into memory."
