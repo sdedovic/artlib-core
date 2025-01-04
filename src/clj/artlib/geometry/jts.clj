@@ -1,7 +1,8 @@
 (ns artlib.geometry.jts
-  (:import (org.locationtech.jts.geom GeometryFactory Coordinate Polygon Geometry)
-           (org.locationtech.jts.algorithm RobustLineIntersector)
-           (org.locationtech.jts.operation.buffer BufferParameters)))
+  (:import (org.locationtech.jts.algorithm RobustLineIntersector)
+           (org.locationtech.jts.operation.buffer BufferParameters)
+           (org.locationtech.jts.triangulate VoronoiDiagramBuilder)
+           (org.locationtech.jts.geom Coordinate Geometry GeometryFactory Point Polygon)))
 
 (defn ^Coordinate ->Coordinate
   "Converts the paremeters to a Coordinate. Calling with a single argument
@@ -15,12 +16,32 @@
    (Coordinate. (double x) (double y) (double z))))
 
 (defn Coordinate->point
-  "Convert the Coordinate to a vec of its elements/"
+  "Convert the Coordinate to a vec of its elements."
   [^Coordinate coord]
   ;; .equals for ##NaN becuase Clojure will never =, == ##NaN
   (if (.equals (.getZ coord) Coordinate/NULL_ORDINATE)
     [(.getX coord) (.getY coord)]
     [(.getX coord) (.getY coord) (.getZ coord)]))
+
+(defn ^Point ->Point
+  "Converts the paremeters to a Coordinate. Calling with a single argument
+    treats the value as a vector. Calling with two or more treats the
+    arguments as elements."
+  ([elements]
+   (apply ->Point elements))
+  ([x y]
+   (let [factory (new GeometryFactory)
+         coord (->Coordinate x y)]
+     (.createPoint factory coord)))
+  ([x y z]
+   (let [factory (new GeometryFactory)
+         coord (->Coordinate x y z)]
+     (.createPoint factory coord))))
+
+(defn Point->point
+  "Convert the Point to a vec of its elements."
+  [^Point point]
+  (Coordinate->point (.getCoordinate point)))
 
 (defn- repair
   "Closes the points if they are not closed,
@@ -55,6 +76,36 @@
        (drop-last points)
        points))))
 
+;; TODO(2025-01-04): move methods below this comment to different
+;;  namespace as it probably doesn't belong here
+(defn calc-voronoi
+  "Computes the Voronoi diagram for the supplied set of points, returing
+    a collection of polygons, each representing a cell of the diagram."
+  ([points]
+   (let [factory (new GeometryFactory)
+         builder (doto
+                   (new VoronoiDiagramBuilder)
+                   (.setSites (map ->Coordinate points)))
+         diagram (.getDiagram builder factory)
+         geoms (->> (.getNumGeometries diagram)
+                    (range)
+                    (map #(.getGeometryN diagram %))
+                    (map Geometry->points))]
+     geoms)))
+
+
+(defn area
+  "Compute the area of the supplied polygon."
+  [points]
+  (let [poly (->Polygon points)]
+    (.getArea poly)))
+
+(defn centroid
+  "Compute the centroid (center of mass) of the supplied polygon."
+  [points]
+  (let [poly (->Polygon points) 
+        point (.getCentroid poly)]
+    (Point->point point)))
 
 ;; TODO(2024-1-21): move methods below this comment to a different 
 ;;  namespace as they are implmentation-agnostic and general purpose.

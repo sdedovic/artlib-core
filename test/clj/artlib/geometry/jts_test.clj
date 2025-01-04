@@ -1,5 +1,6 @@
 (ns artlib.geometry.jts-test
   (:require [artlib.geometry.jts :as jts]
+            [artlib.testutils :refer [eq-vecf]]
             [clojure.test :refer [is deftest]]))
 
 (deftest ->Coordinate
@@ -26,6 +27,29 @@
         b (jts/->Coordinate [1.2 3 4.5])]
     (is (= (jts/Coordinate->point a) [1.2 3.0]))
     (is (= (jts/Coordinate->point b) [1.2 3.0 4.5]))))
+
+(deftest ->Point
+  (let [a (jts/->Point [1.2 3])
+        b (jts/->Point [1.2 3])
+        c (jts/->Point 1.2 3)
+        d (jts/->Point 1.2 3)]
+    (is (= (.getX a) 1.2))
+    (is (= (.getY a) 3.0))
+
+    (is (= (.getX b) 1.2))
+    (is (= (.getY b) 3.0))
+
+    (is (= (.getX c) 1.2))
+    (is (= (.getY c) 3.0))
+
+    (is (= (.getX d) 1.2))
+    (is (= (.getY d) 3.0))))
+
+(deftest Point->point
+  (let [a (jts/->Point [1.2 3])
+        b (jts/->Point [1.2 4.5])]
+    (is (= (jts/Point->point a) [1.2 3.0]))
+    (is (= (jts/Point->point b) [1.2 4.5]))))
 
 (deftest ->polygon
   (let [points-a [[0 0] [1 0] [2 0] [2 5] [1 5] [0 5]]
@@ -146,3 +170,17 @@
             [[5.0 2.0] [5.0 3.0]]
             [[5.0 3.0] [5 5]]]
           (jts/cut-segment-by-collection v [a b c d])))))
+
+
+;; I am too lazy to properly test this... probably can generate test data
+;;  using a different voronoi diagram library and use that for validation?
+;;  Otherwise I have to _actually_ prove it is correct and that's too 
+;;  much work.
+(deftest calc-voronoi
+  (let [points [[0.1 0.1] [0.9 0.3] [0.7 2.4] [1.1 9.2] [3.2 5.4]]
+        polys (jts/calc-voronoi points)]
+    (is (= 5 (count polys)))))
+
+(deftest centroid
+  (let [a [[0.1 0.1] [0.9 0.3] [0.7 2.4] [1.1 9.2] [3.2 5.4]]]
+    (is (eq-vecf [1.6985764 5.45367] (jts/centroid a)))))
