@@ -89,10 +89,19 @@
          diagram (.getDiagram builder factory)
          geoms (->> (.getNumGeometries diagram)
                     (range)
-                    (map #(.getGeometryN diagram %))
-                    (map Geometry->points))]
-     geoms)))
+                    (map #(.getGeometryN diagram %)))]
+     (map (fn [^Geometry geom]
+            (let [poly (Geometry->points geom)
+                  centroid   (Point->point (.getCentroid geom))
 
+                  ;; https://locationtech.github.io/jts/javadoc/
+                  ;; The userData attribute of each face Polygon is set to 
+                  ;;  the Coordinate of the corresponding input site. 
+                  input-site (Coordinate->point (.getUserData geom))]
+              (with-meta
+                poly
+                {:centroid centroid :seed input-site})))
+          geoms))))
 
 (defn area
   "Compute the area of the supplied polygon."
