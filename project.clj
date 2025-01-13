@@ -3,6 +3,7 @@
   :url "https://github.com/sdedovic/artlib-core"
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
+  :plugins [[lein-changelog "0.3.2"]]
   :dependencies [[org.clojure/clojure "1.12.0-alpha1"]
                  [net.mikera/vectorz-clj "0.48.0"]
                  [progrock "0.1.2"]
@@ -12,8 +13,8 @@
                  [org.clojure/data.json "2.4.0"]
                  [org.locationtech.jts/jts-core "1.18.1"]]
   :release-tasks [["vcs" "assert-committed"]
-                  ["change" "version"
-                   "leiningen.release/bump-version" "release"]
+                  ["change" "version" "leiningen.release/bump-version" "release"]
+                  ["changelog" "release"]
                   ["vcs" "commit"]
                   ["vcs" "tag" "--no-sign"] ;; TODO: start signing things
                   ["deploy"]
