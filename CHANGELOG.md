@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.12] — 2025-01-13
+
 ### Added
 
 - New `color.model` namespace for color model transformations
@@ -21,4 +23,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial code when starting changelog
 
-[Unreleased]: https://github.com/sdedovic/artlib-core/compare/0.0.11...HEAD
+[0.0.12]: https://github.com/sdedovic/artlib-core/compare/0.0.11...0.0.12
+[Unreleased]: https://github.com/sdedovic/artlib-core/compare/0.0.12...HEAD
