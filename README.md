@@ -30,3 +30,4 @@ Very expiremental. See also [artlib-cuda](https://github.com/sdedovic/artlib-cud
 
 ### misc
 - **`modulation`** - A set of modulation sources based on the audio production concepts
+- **`waveform`** - Simple periodic waveforms, e.g. sine, cosine, triangle
