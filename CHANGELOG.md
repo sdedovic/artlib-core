@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - New `color.model` namespace for color model transformations
 - Started changelog (`CHANGELOG.md`)
+- New `waveform` namespace of common periodic waveforms
 
 ### Changed
 
