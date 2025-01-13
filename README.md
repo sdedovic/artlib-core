@@ -7,13 +7,15 @@ Very expiremental. See also [artlib-cuda](https://github.com/sdedovic/artlib-cud
 
 ## Contents 
 ### 3d
-- **`3d.native`** - 3D projection a la OpenGL and GLM. Backed by `vectorz-clj` and runs on the CPU.
+- **`3d.native`** - 3D projection a la OpenGL and GLM. Backed by `vectorz-clj` and runs on the CPU
 
 ### color
 - **`color.palettes`** - oscillating color palletes and color pallete generator
+- **`color.dictionary`** - implementation of [A Dictionary of Color combinations by Sanzo Wada](https://en.wikipedia.org/wiki/Sanzo_Wada)
+- **`color.model`** - various color model transforms, e.g. `rgb->hsb`
 
 ### geometry
-- **`geometry.jts`** - tools for offsetting and insetting arbitrary polygons, wrapper around JTS
+- **`geometry.jts`** - a wrapper around the JTS Topology Suite containing various high-level utilities
 
 ### keyframing
 - **`keyframea.core`** - basic keyframing
