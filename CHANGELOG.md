@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.13] — 2025-01-13
+
 ### Changed
 
 - moved from `vectorz` to `core.matrix` to better support alternative implementations
@@ -28,4 +30,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial code when starting changelog
 
 [0.0.12]: https://github.com/sdedovic/artlib-core/compare/0.0.11...0.0.12
-[Unreleased]: https://github.com/sdedovic/artlib-core/compare/0.0.12...HEAD
+[0.0.13]: https://github.com/sdedovic/artlib-core/compare/0.0.12...0.0.13
+[Unreleased]: https://github.com/sdedovic/artlib-core/compare/0.0.13...HEAD
