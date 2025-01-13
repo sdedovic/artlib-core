@@ -18,3 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Getters in `color.dictionary` support omission of color dictionary object (first parameter) instead relying on default value
 
 ## [0.0.11] - 2025-01-04
+
+- Initial code when starting changelog
+
+[Unreleased]: https://github.com/sdedovic/artlib-core/compare/0.0.11...HEAD
