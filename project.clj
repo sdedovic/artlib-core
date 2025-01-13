@@ -5,7 +5,7 @@
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :plugins [[lein-changelog "0.3.2"]]
   :dependencies [[org.clojure/clojure "1.12.0-alpha1"]
-                 [net.mikera/vectorz-clj "0.48.0"]
+                 [net.mikera/core.matrix "0.63.0"]
                  [progrock "0.1.2"]
                  [quil "4.3.1323"]
 
