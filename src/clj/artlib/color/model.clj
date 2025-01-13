@@ -1,11 +1,11 @@
-(ns artlib.color.spaces
+(ns artlib.color.model
   "This namespace contains various functions for transforming
-    color information across different representations and 
-    color spaces. 
+    color information across different representations, i.e. the
+    way colors can be represented as tuples of numbers.
   
-  Note: by default, a \"color\" is a 3-ple, 4-ple, or 5-ple of
-    numbers (with the last entry being the Alpha channel) whereas 
-    a \"Color\" refers to the java.awt.Color class."
+  Note: by default, a \"color\" is a 3-vec, 4-vec, or 5-vec of numbers
+    (with the last entry typically being the Alpha channel) whereas
+    the term \"Color\" refers to the java.awt.Color class."
   (:import [java.util HashMap ArrayList]
            [java.awt Color]))
 
@@ -84,9 +84,9 @@
   [cmyk]
   (let [[c m y k] cmyk
         k-amt (- 1 (/ k 100))
-        r (- 1 (/ c 100) k-amt)
-        g (- 1 (/ m 100) k-amt)
-        b (- 1 (/ y 100) k-amt)]
+        r (* (- 1 (/ c 100)) k-amt)
+        g (* (- 1 (/ m 100)) k-amt)
+        b (* (- 1 (/ y 100)) k-amt)]
     (Color. (float r) (float g) (float b))))
 
 (defn 
@@ -215,3 +215,34 @@
     Alias for rgbai->Color."
   [rgba]
   (rgbai->Color rgba))
+
+; ==== HSB[A] Transforms ==== ;
+(defn
+  hsb->Color
+  "Convert an HSB color to java.awt.Color.
+    Range for H is [0, 360). Overflow will be taken modulo 360.
+    Range for S, B is [0, 100]."
+  [hsb]
+  (let [[h s b] hsb]
+    (when (< 100 s)
+      (throw (IllegalArgumentException.
+               "Invalid value for Saturation. Input must be an integer in the range [0, 100].")))
+    (when (< 100 b)
+      (throw (IllegalArgumentException.
+               "Invalid value for Brightness. Input must be an integer in the range [0, 100].")))
+    (Color/getHSBColor (float (/ h 360))
+                       (float (/ s 100))
+                       (float (/ b 100)))))
+
+(defn
+  hsba->Color
+  "Convert an HSBA color to java.awt.Color.
+    Range for H is [0, 360). Overflow will be taken modulo 360.
+    Range for S, B is [0, 100].
+    Range for A is [0.0, 1.0)."
+  [hsba]
+  (let [[h s b a] hsba
+        [r g b] (->> [h s b]
+                     hsb->Color
+                     Color->rgb)]
+    (rgba->Color [r g b a])))

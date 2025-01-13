@@ -16,3 +16,13 @@
     (is (eq-veci [0 0 100] (dictionary/get-color-hsb dict "white")))
     (is (eq-veci [46 100 31] (dictionary/get-color-hsb dict "sepia")))
     (is (eq-veci [60 100 100] (dictionary/get-color-hsb dict "yellow")))))
+
+; This test is the same as the above but does not pass the
+;   initialized dictionary object as a parameter to the various
+;   get-color-* functions. Instead it relies on the default dict,
+;   which is the same as simply executing the init function.
+(deftest default-dict
+  (is (eq-veci [0 0 0] (dictionary/get-color-hsb "black")))
+  (is (eq-veci [0 0 100] (dictionary/get-color-hsb "white")))
+  (is (eq-veci [46 100 31] (dictionary/get-color-hsb "sepia")))
+  (is (eq-veci [60 100 100] (dictionary/get-color-hsb "yellow"))))

@@ -1,7 +1,7 @@
 (ns artlib.color.dictionary
   "This namespace contiains utilities for interfacing with definitions from 
   the book \"A Dictionary of Colour Combinations\" compiled by Sanzo Wada."
-  (:require [artlib.color.spaces :refer :all]
+  (:require [artlib.color.model :refer :all]
             [clojure.string :refer [lower-case]]
             [clojure.java.io :as io]
             [clojure.data.json :as json])
