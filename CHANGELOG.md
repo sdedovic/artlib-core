@@ -6,27 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- new `noise.opensimplex` namespace and relevant functions binding to OpenSimplex 2 library. Includes 2, 3, and 4 dimentional noise functions.
 
 ## [0.0.13] — 2025-01-13
-
 ### Changed
-
 - moved from `vectorz` to `core.matrix` to better support alternative implementations
 
 ## [0.0.12] — 2025-01-13
-
 ### Added
-
-- New `color.model` namespace for color model transformations
-- Started changelog (`CHANGELOG.md`)
-- New `waveform` namespace of common periodic waveforms
+- new `color.model` namespace for color model transformations
+- started changelog (`CHANGELOG.md`)
+- new `waveform` namespace of common periodic waveforms
 
 ### Changed
-
-- Getters in `color.dictionary` support omission of color dictionary object (first parameter) instead relying on default value
+- getters in `color.dictionary` support omission of color dictionary object (first parameter) instead relying on default value
 
 ## [0.0.11] - 2025-01-04
-
 - Initial code when starting changelog
 
 [0.0.12]: https://github.com/sdedovic/artlib-core/compare/0.0.11...0.0.12

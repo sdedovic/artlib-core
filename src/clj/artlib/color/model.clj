@@ -6,8 +6,7 @@
   Note: by default, a \"color\" is a 3-vec, 4-vec, or 5-vec of numbers
     (with the last entry typically being the Alpha channel) whereas
     the term \"Color\" refers to the java.awt.Color class."
-  (:import [java.util HashMap ArrayList]
-           [java.awt Color]))
+  (:import (java.awt Color)))
 
 ; ==== java.awt.Color Transforms ==== ;
 (defn

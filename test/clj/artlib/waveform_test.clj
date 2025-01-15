@@ -1,7 +1,7 @@
 (ns artlib.waveform-test
   (:require [artlib.testutils :refer [eq-float]]
             [artlib.waveform :as waveform]
-            [clojure.test :refer [is deftest testing]]))
+            [clojure.test :refer [deftest is]]))
 
 (deftest sin
   (is (eq-float (waveform/sin 2.123) (Math/sin 2.123)))

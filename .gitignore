@@ -1,3 +1,4 @@
+# java/clojure
 /output 
 /target
 /classes
@@ -15,6 +16,7 @@ pom.xml.asc
 
 # intellij
 .idea/
+*.iml
 
 # direnv
 .envrc
