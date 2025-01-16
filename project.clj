@@ -1,4 +1,4 @@
-(defproject com.dedovic/artlib-core "0.0.15-SNAPSHOT"
+(defproject com.dedovic/artlib-core "0.0.15"
   :description "Utilities for making generative art"
   :url "https://github.com/sdedovic/artlib-core"
   :license {:name "Apache License, Version 2.0"

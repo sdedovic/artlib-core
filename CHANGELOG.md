@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.0.15] — 2025-01-16
 ### Fixed
 - fix bug in `color.dictionary` where color combination accessors crash
 
@@ -32,4 +34,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.0.12]: https://github.com/sdedovic/artlib-core/compare/0.0.11...0.0.12
 [0.0.13]: https://github.com/sdedovic/artlib-core/compare/0.0.12...0.0.13
 [0.0.14]: https://github.com/sdedovic/artlib-core/compare/0.0.13...0.0.14
-[Unreleased]: https://github.com/sdedovic/artlib-core/compare/0.0.14...HEAD
+[0.0.15]: https://github.com/sdedovic/artlib-core/compare/0.0.14...0.0.15
+[Unreleased]: https://github.com/sdedovic/artlib-core/compare/0.0.15...HEAD
