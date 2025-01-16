@@ -93,7 +93,8 @@
     ([combination]
      (get-combination-cmyk default-color-dict combination))
     ([^Dictionary color-dictionary combination]
-     (get (:combinations color-dictionary) combination)))
+     (when-let [match (get (:combinations color-dictionary) combination)]
+       (map ->cmyk match))))
 
   (defn
     get-combination-rgb
