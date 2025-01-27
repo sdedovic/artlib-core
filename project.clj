@@ -11,7 +11,10 @@
 
                  ; serde
                  [org.clojure/data.json "2.4.0"]
-                 [org.locationtech.jts/jts-core "1.18.1"]]
+                 [org.locationtech.jts/jts-core "1.18.1"]
+                 
+                 ; numerical integration
+                 [org.apache.commons/commons-math3 "3.6.1"]]
   :release-tasks [["vcs" "assert-committed"]
                   ["test"]
                   ["change" "version" "leiningen.release/bump-version" "release"]

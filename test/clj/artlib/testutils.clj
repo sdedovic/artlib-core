@@ -1,6 +1,6 @@
 (ns artlib.testutils)
 
-(let [epsilon 0.000001]
+(let [epsilon 1e-6]
   (defn eq-float
     "Truthiness of equality between two numbers using maching epsilon."
     [a b]
