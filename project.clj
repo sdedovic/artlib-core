@@ -1,4 +1,4 @@
-(defproject com.dedovic/artlib-parent "0.0.17"
+(defproject com.dedovic/artlib-parent "0.0.18-SNAPSHOT"
   :plugins [[lein-changelog "0.3.2"]
             [lein-pprint "1.3.2"]
             [com.dedovic/lein-modules-new-profiles "0.3.14"]]
@@ -43,7 +43,7 @@
                   ["vcs" "tag" "--no-sign"]                 ;; TODO: start signing things
 
                   ;; 4 - deploy to clojars
-                  ["modules" "deploy"]
+                  ["modules" "with-profile" "inherited" "deploy"]
 
                   ;; 5 - bump version for new dev cycle and push
                   ["change" "version" "leiningen.release/bump-version"]
