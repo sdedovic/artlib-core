@@ -1,7 +1,7 @@
 (ns artlib.geometry.barycentric)
 
 (defn point->barycentric
-  "Returns the barycentric coordinate of the point on the traingle defined
+  "Returns the barycentric coordinate of the point on the triangle defined
     by vertexes a, b, c."
   [vertex-a vertex-b vertex-c point]
   ;; TODO(2023-06-18): probably a better way to do this with core.matrix
