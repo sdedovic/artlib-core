@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.17] — 2025-02-02
+
 ## [0.1.0] — 2025-02-02
 
 ## [0.1.0] — 2025-02-02
@@ -49,4 +51,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.0.16]: https://github.com/sdedovic/artlib-core/compare/0.0.15...0.0.16
 [0.1.0]: https://github.com/sdedovic/artlib-core/compare/0.0.16...0.1.0
 [0.1.0]: https://github.com/sdedovic/artlib-core/compare/0.1.0...0.1.0
-[Unreleased]: https://github.com/sdedovic/artlib-core/compare/0.1.0...HEAD
+[0.0.17]: https://github.com/sdedovic/artlib-core/compare/0.1.0...0.0.17
+[Unreleased]: https://github.com/sdedovic/artlib-core/compare/0.0.17...HEAD
