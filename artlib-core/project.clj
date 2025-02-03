@@ -1,4 +1,4 @@
-(defproject com.dedovic/artlib-core "0.0.17-SNAPSHOT"
+(defproject com.dedovic/artlib-core "0.0.17"
   :description "Utilities for making generative art"
   :dependencies [[org.clojure/clojure]
                  [net.mikera/core.matrix]
