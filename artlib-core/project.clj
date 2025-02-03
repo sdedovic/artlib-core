@@ -1,5 +1,6 @@
 (defproject com.dedovic/artlib-core "0.0.17"
   :description "Utilities for making generative art"
+  :plugins [[com.dedovic/lein-modules-new-profiles "0.3.14"]]
   :dependencies [[org.clojure/clojure]
                  [net.mikera/core.matrix]
                  [progrock]
