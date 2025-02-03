@@ -1,4 +1,4 @@
-(defproject com.dedovic/artlib-parent "0.1.0"
+(defproject com.dedovic/artlib-parent "0.0.17"
   :plugins [[lein-changelog "0.3.2"]
             [lein-pprint "1.3.2"]
             [com.dedovic/lein-modules-new-profiles "0.3.14"]]
