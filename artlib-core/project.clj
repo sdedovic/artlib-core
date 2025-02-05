@@ -1,8 +1,8 @@
 (defproject com.dedovic/artlib-core "0.0.18-SNAPSHOT"
   :description "Utilities for making generative art"
-  :plugins [[com.dedovic/lein-modules-new-profiles "0.3.14"]]
-  :dependencies [[org.clojure/clojure]
-                 [com.dedovic/artlib-common]
+  :plugins [[com.dedovic/lein-modules-new-profiles "0.3.16"]]
+  :dependencies [[org.clojure/clojure :scope "provided"]
+                 [com.dedovic/artlib-common :version]
 
                  [net.mikera/core.matrix]
                  [progrock]
