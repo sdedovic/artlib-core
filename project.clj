@@ -3,7 +3,7 @@
             [lein-pprint "1.3.2"]
             [com.dedovic/lein-modules-new-profiles "0.3.14"]]
 
-  :modules {:dirs ["artlib-core"] :subprocess nil}
+  :modules {:dirs ["artlib-core" "artlib-cuda" "artlib-common"] :subprocess nil}
   :profiles {;; profile applied to all modules
              :inherited
              {:url                  "https://github.com/sdedovic/artlib-core"
@@ -17,9 +17,18 @@
 
               ;; versions go here
               :managed-dependencies [[org.clojure/clojure "1.12.0-alpha1"]
-                                     [org.clojure/buildtest "1.0.0"]
+                                     [org.clojure/core.match "1.0.0"]
                                      [net.mikera/core.matrix "0.63.0"]
+
+                                     ;; this
+                                     [com.dedovic/artlib-core "0.0.18-SNAPSHOT"]
+                                     [com.dedovic/artlib-common "0.0.18-SNAPSHOT"]
+                                     [com.dedovic/artlib-cuda "0.0.18-SNAPSHOT"]
+
+                                     ; progress bar
                                      [progrock "0.1.2"]
+
+                                     ; graphics
                                      [quil "4.3.1323"]
 
                                      ; serde
@@ -49,4 +58,5 @@
                   ["change" "version" "leiningen.release/bump-version"]
                   ["modules" "change" "version" "leiningen.release/bump-version"]
                   ["vcs" "commit"]
-                  ["vcs" "push"]])
+                  ["vcs" "push"]]
+  :dependencies [[org.clojure/clojure]])

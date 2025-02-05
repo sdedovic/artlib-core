@@ -1,12 +1,14 @@
 (defproject com.dedovic/artlib-cuda "0.0.18-SNAPSHOT"
   :description "GPU (via CUDA) accelerated utilities for making generative art"
+  :plugins [[com.dedovic/lein-modules-new-profiles "0.3.14"]]
   :dependencies [[org.clojure/clojure]
                  [org.clojure/core.match]
 
-                 [uncomplicate/clojurecuda "0.10.0"]
-                 [uncomplicate/commons "0.10.0"]
-                 [org.jcuda/jcuda "10.1.0"]
-                 [org.jcuda/jcurand "10.1.0"]]
+                 [com.dedovic/artlib-common]
+
+                 [uncomplicate/clojurecuda "0.21.0"]
+                 [uncomplicate/commons "0.16.1"]]
+  :profiles {:test {:dependencies [[org.bytedeco/cuda "12.6-9.5-1.5.11" :classifier "linux-x86_64-redist"]] }}
   :source-paths ["src/clj", "src/cuda"]
   :java-source-paths ["src/java"]
   :resource-paths ["resources"]
