@@ -2,7 +2,7 @@
   :description "Utilities for making generative art"
   :plugins [[com.dedovic/lein-modules-new-profiles "0.3.16"]]
   :dependencies [[org.clojure/clojure :scope "provided"]
-                 [com.dedovic/artlib-common :version]
+                 [com.dedovic/artlib-common]
 
                  [net.mikera/core.matrix]
                  [progrock]

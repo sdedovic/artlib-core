@@ -3,9 +3,9 @@
   (:require [artlib.acceleration.core :as accel]
             [clojure.pprint :refer [pprint]]
             [uncomplicate.clojurecuda.core :as cuda]
-            [uncomplicate.commons.core :refer [info]]
-            ;;[uncomplicate.clojurecuda.info :refer :all]
-            ))
+            [uncomplicate.commons.core :refer [info with-release]]
+            [mikera.image.core :as img])
+  (:import [java.awt.image DataBuffer]))
 
 ;; Acceleration
 
@@ -19,7 +19,24 @@
   accel/ContourHelper
   (compute-contour-lines
     [this heightmap threshold]
-    []))
+    (let [channels (->> heightmap .getRaster .getNumBands)]
+      (when (> channels 1)
+        (throw (new IllegalArgumentException "heightmap has more than 1 color channel")))
+
+      (let [dtype (->> heightmap
+                       .getRaster
+                       .getDataBuffer
+                       .getDataType)]
+        (when (not= dtype DataBuffer/TYPE_FLOAT)
+          (throw (new IllegalArgumentException "heightmap data is not type float")))
+          
+        (let [width (img/width heightmap) 
+              height (img/height heightmap) 
+              pixels (img/get-pixels heightmap)] 
+          (with-release [pixel-buffer (cuda/mem-alloc-driver (* width height Float/BYTES))
+                         out-buffer (cuda/mem-alloc-driver (* width height Integer/BYTES))]
+            (println "beep boop bop .... zzzzz..... r..f.g..a.....g..gggg....  pretending to do gpu stuff")
+            []))))))
 
 ;; Acceleration Provider
 
