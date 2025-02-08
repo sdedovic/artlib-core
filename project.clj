@@ -1,9 +1,11 @@
 (defproject com.dedovic/artlib-parent "0.0.18-SNAPSHOT"
   :plugins [[lein-changelog "0.3.2"]
             [lein-pprint "1.3.2"]
-            [com.dedovic/lein-modules-new-profiles "0.3.14"]]
+            [com.dedovic/lein-modules-new-profiles "0.3.16"]]
 
-  :modules {:dirs ["artlib-core"] :subprocess nil}
+  :modules {:dirs ["artlib-core" "artlib-cuda" "artlib-common"]
+            ;:subprocess nil
+             }
   :profiles {;; profile applied to all modules
              :inherited
              {:url                  "https://github.com/sdedovic/artlib-core"
@@ -14,12 +16,22 @@
                                                   :url           "https://clojars.org/repo"
                                                   :username      :env/clojars_user
                                                   :password      :env/clojars_token}]]
+              :pom-location "target/"
 
               ;; versions go here
-              :managed-dependencies [[org.clojure/clojure "1.12.0-alpha1"]
-                                     [org.clojure/buildtest "1.0.0"]
+              :managed-dependencies [[org.clojure/clojure "1.12.0"]
+                                     [org.clojure/core.match "1.0.0"]
                                      [net.mikera/core.matrix "0.63.0"]
+
+                                     ;; this
+                                     [com.dedovic/artlib-core :version]
+                                     [com.dedovic/artlib-common :version]
+                                     [com.dedovic/artlib-cuda :version]
+
+                                     ; progress bar
                                      [progrock "0.1.2"]
+
+                                     ; graphics
                                      [quil "4.3.1323"]
 
                                      ; serde
@@ -49,4 +61,5 @@
                   ["change" "version" "leiningen.release/bump-version"]
                   ["modules" "change" "version" "leiningen.release/bump-version"]
                   ["vcs" "commit"]
-                  ["vcs" "push"]])
+                  ["vcs" "push"]]
+  :dependencies [[org.clojure/clojure :scope "provided"]])
