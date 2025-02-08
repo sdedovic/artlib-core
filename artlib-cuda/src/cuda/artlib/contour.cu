@@ -64,9 +64,9 @@ __global__ void calculate_line_segments(float *heightmap, float *out,
     break;
   case 3:
     out[i * 8 + 0] = (float)(x + 1) + 0.5;
-    out[i * 8 + 1] = map(threshold, a, d) + (float)y + 0.5;
+    out[i * 8 + 1] = map(threshold, b, d) + (float)y + 0.5;
     out[i * 8 + 2] = (float)x + 0.5;
-    out[i * 8 + 3] = map(threshold, b, c) + (float)y + 0.5;
+    out[i * 8 + 3] = map(threshold, a, c) + (float)y + 0.5;
     break;
   case 4:
     out[i * 8 + 0] = map(threshold, a, b) + (float)x + 0.5;
