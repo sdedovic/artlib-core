@@ -2,6 +2,9 @@
   (:import [java.awt.image BufferedImage DataBufferFloat WritableRaster ComponentColorModel BandedSampleModel]
            [java.awt.color ColorSpace]))
 
+;; https://android.googlesource.com/platform/frameworks/native/+/43aa2b1cbf7a03e248e10f4d0fec0463257cd52d/awt/java/awt/image/DataBuffer.java
+(defn data-type->type [in])
+
 (defn make-gray-32f 
   "Creates a new BufferedImage with the specified width and height."
   ^BufferedImage [width height]

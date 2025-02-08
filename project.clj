@@ -24,9 +24,9 @@
                                      [net.mikera/core.matrix "0.63.0"]
 
                                      ;; this
-                                     [com.dedovic/artlib-core :version]
-                                     [com.dedovic/artlib-common :version]
-                                     [com.dedovic/artlib-cuda :version]
+                                     [com.dedovic/artlib-core "0.0.18-SNAPSHOT"]
+                                     [com.dedovic/artlib-common "0.0.18-SNAPSHOT"]
+                                     [com.dedovic/artlib-cuda "0.0.18-SNAPSHOT"]
 
                                      ; progress bar
                                      [progrock "0.1.2"]

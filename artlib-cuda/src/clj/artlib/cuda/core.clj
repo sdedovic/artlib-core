@@ -1,9 +1,10 @@
-(ns artlib.cuda.core)
+(ns artlib.cuda.core
+  (:require [clojure.java.io :as io]))
 
 (defn default-headers
   "Returns the set of default headers to include when compiling a CUDA program."
   []
-  {"Nvidia/helper_math.h" (slurp "src/cuda/vendor/helper_math.h")})
+  {"Nvidia/helper_math.h" (slurp (io/resource "vendor/helper_math.h"))})
 
 (defn default-nvcc-args
   "Returns a list of default compiler args."

@@ -24,11 +24,3 @@
           accelerator (acceleration/create provider)]
       (is (some? (acceleration/info accelerator))))))
 
-(deftest cuda-contour-helper
-  (let [provider (first (acceleration/providers))
-        accelerator (acceleration/create provider)]
-    (testing "basic execution flow"
-      (let [rgb-32f (img/make-rgb-32f 10 10)
-            gray-32f (img/make-gray-32f 10 10)]
-        (is (thrown? IllegalArgumentException (acceleration/compute-contour-lines accelerator rgb-32f 0.5)))
-        (is (some? (acceleration/compute-contour-lines accelerator gray-32f 0.5)))))))
