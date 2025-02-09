@@ -31,4 +31,6 @@
   See: https://contourpy.readthedocs.io/en/latest/config.html"
   (compute-contour-lines
     [this heightmap threshold] 
-    "Given a heightmap, returns the contour lines at the specified threshold as a seq of line segments."))
+    "Given a heightmap, returns the contour lines at the specified threshold as a seq of 
+      line segments. If threshold is sequential (vec or seq), then returns a seq of seq?
+      of line segments in the same order."))

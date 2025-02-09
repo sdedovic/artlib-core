@@ -37,35 +37,55 @@
               num-cells (* (dec width) (dec height))
 
               pixels (img/get-pixels heightmap)
-              module (get-in this [:modules ::contour])] 
+              module (get-in this [:modules ::contour :module])
+              buffers-atom (get-in this [:modules ::contour :buffers])]
           (cuda/in-context 
             (:ctx this)
-            (with-release [pixel-buffer (cuda/mem-alloc-driver (* width height Float/BYTES))
 
-                           ;; NOTE: output is one or two line segments, i.e. [[x1 y1] [x2 y2] ...] which 
-                           ;;   means it requires, at worst, 8 floats to store, 4 per line segment
-                           out-buffer (cuda/mem-alloc-driver (* num-cells 8 Float/BYTES))
-                           out-pointer (float-pointer (* num-cells 8))]
+            (when (or (nil? @buffers-atom)
+                      (> num-cells (:capacity @buffers-atom)))
+              (reset! buffers-atom {:capacity num-cells
+
+                                    :pixel-buffer 
+                                    (cuda/mem-alloc-driver (* width height Float/BYTES))
+
+                                    ;; NOTE: output is one or two line segments, i.e. [[x1 y1] [x2 y2] ...] which 
+                                    ;;   means it requires, at worst, 8 floats to store, 4 per line segment
+                                    :polygon-buffer
+                                    (cuda/mem-alloc-driver (* num-cells 8 Float/BYTES))}))
+
+            (let [{pixel-buffer :pixel-buffer 
+                   polygon-buffer :polygon-buffer} @buffers-atom]
               (cuda/memcpy-host! pixels pixel-buffer)
-              (contour-kernel/calculate-line-segments module 
-                                                      pixel-buffer out-buffer 
-                                                      (dec width) (dec height) 
-                                                      threshold)
-              (cuda/memcpy-host! out-buffer out-pointer)
-              (->> (pointer-seq out-pointer)
-                   (partition 2)
-                   (map vec)
-                   (partition 2)
-                   (map vec)
-                   (filter #(every? (complement zero?) (flatten %)))
+              (let [result (->> [threshold]
+                                flatten
+                                (map (fn [threshold]
+                                       (contour-kernel/calculate-line-segments module 
+                                                                               pixel-buffer polygon-buffer 
+                                                                               (dec width) (dec height) 
+                                                                               threshold)
+                                       (with-release [polygon-pointer (float-pointer (* num-cells 8))]
+                                         (cuda/memcpy-host! polygon-buffer polygon-pointer)
+                                         (->> (pointer-seq polygon-pointer)
+                                              (partition 2)
+                                              (map vec)
+                                              (partition 2)
+                                              (map vec)
+                                              (filter #(every? (complement zero?) (flatten %)))
 
-                   ;; this is required to consume the data otherwise it will
-                   ;;  be released when returning the sequence
-                   doall))))))))
+                                              ;; this is required to consume the data otherwise it will
+                                              ;;  be released when returning the sequence
+                                              doall))))
+                                doall)]
+                (if (sequential? threshold)
+                  result
+                  (first result))))))))))
 
 (defn new-cuda-acceleration [device]
   (let [ctx (cuda/context device)
-        modules {::contour (contour-kernel/create-module ctx)}]
+        modules {::contour 
+                 {:module (contour-kernel/create-module ctx)
+                  :buffers (atom nil)}}]
     (->CudaAcceleration device ctx modules)))
 
 ;; Acceleration Provider

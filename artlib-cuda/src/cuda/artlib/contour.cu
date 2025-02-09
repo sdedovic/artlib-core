@@ -12,10 +12,42 @@ __global__ void threshold_f(float *heightmap, int *out, int width, int height,
   out[i] = (int)(heightmap[i] > threshold);
 }
 
+__constant__ int vertex_lut[2][16][4] = {{{},
+                                          {2, 3},
+                                          {3, 4},
+                                          {2, 4},
+                                          {1, 2},
+                                          {1, 3},
+                                          {1, 2, 3, 4},
+                                          {1, 4},
+                                          {4, 1},
+                                          {4, 1, 2, 3},
+                                          {3, 1},
+                                          {2, 1},
+                                          {4, 2},
+                                          {4, 3},
+                                          {3, 2}},
+                                         {{},
+                                          {2, 3},
+                                          {3, 4},
+                                          {2, 4},
+                                          {1, 2},
+                                          {1, 3},
+                                          {1, 4, 3, 2},
+                                          {1, 4},
+                                          {4, 1},
+                                          {2, 1, 4, 3},
+                                          {3, 1},
+                                          {2, 1},
+                                          {4, 2},
+                                          {4, 3},
+                                          {3, 2}}};
+
 // Re-map number from one range to [0.0, 1.0].
 // https://docs.arduino.cc/language-reference/en/functions/math/map/
 __device__ inline float map(float x, float in_min, float in_max) {
-  return (x - in_min) / (in_max - in_min);
+  return (in_min == in_max && in_min == 0.0) ? 0.0
+                                             : (x - in_min) / (in_max - in_min);
 }
 
 __global__ void calculate_line_segments(float *heightmap, float *out,
@@ -44,138 +76,25 @@ __global__ void calculate_line_segments(float *heightmap, float *out,
   int configuration = (((int)(a < threshold)) << 3) |
                       (((int)(b < threshold)) << 2) |
                       (((int)(c < threshold)) << 1) | ((int)(d < threshold));
+  int center = (int)(m > threshold);
+
+  float2 top = make_float2((float)x + map(threshold, a, b), y) + 0.5;
+  float2 right = make_float2(x + 1, (float)y + map(threshold, b, d)) + 0.5;
+  float2 bottom = make_float2((float)x + map(threshold, c, d), y + 1) + 0.5;
+  float2 left = make_float2(x, (float)y + map(threshold, a, c)) + 0.5;
+  float2 vertices[] = {make_float2(0.0, 0.0), top, right, bottom, left};
 
   // TODO: DEBUG symbol in constant memory to flag logging
   // printf("config: %d cell: %dx%d index: %d\n", configuration, x, y, i);
   // printf("values a, b, c, d are: %.2f %.2f %.2f %.2f\n", a, b, c, d);
 
-  switch (configuration) {
-  case 1:
-    out[i * 8 + 0] = (float)(x + 1) + 0.5;
-    out[i * 8 + 1] = map(threshold, b, d) + (float)y + 0.5;
-    out[i * 8 + 2] = map(threshold, c, d) + (float)x + 0.5;
-    out[i * 8 + 3] = (float)(y + 1) + 0.5;
-    break;
-  case 2:
-    out[i * 8 + 0] = map(threshold, c, d) + (float)x + 0.5;
-    out[i * 8 + 1] = (float)(y + 1) + 0.5;
-    out[i * 8 + 2] = (float)x + 0.5;
-    out[i * 8 + 3] = map(threshold, a, c) + (float)y + 0.5;
-    break;
-  case 3:
-    out[i * 8 + 0] = (float)(x + 1) + 0.5;
-    out[i * 8 + 1] = map(threshold, b, d) + (float)y + 0.5;
-    out[i * 8 + 2] = (float)x + 0.5;
-    out[i * 8 + 3] = map(threshold, a, c) + (float)y + 0.5;
-    break;
-  case 4:
-    out[i * 8 + 0] = map(threshold, a, b) + (float)x + 0.5;
-    out[i * 8 + 1] = (float)y + 0.5;
-    out[i * 8 + 2] = (float)(x + 1) + 0.5;
-    out[i * 8 + 3] = map(threshold, b, d) + (float)y + 0.5;
-    break;
-  case 5:
-    out[i * 8 + 0] = map(threshold, a, b) + (float)x + 0.5;
-    out[i * 8 + 1] = (float)y + 0.5;
-    out[i * 8 + 2] = map(threshold, c, d) + (float)x + 0.5;
-    out[i * 8 + 3] = (float)(y + 1) + 0.5;
-    break;
-  case 6:
-    if (m < threshold) {
-      // same as 4
-      out[i * 8 + 0] = map(threshold, a, b) + (float)x + 0.5;
-      out[i * 8 + 1] = (float)y + 0.5;
-      out[i * 8 + 2] = (float)(x + 1) + 0.5;
-      out[i * 8 + 3] = map(threshold, b, d) + (float)y + 0.5;
-
-      // same as 2
-      out[i * 8 + 4] = map(threshold, c, d) + (float)x + 0.5;
-      out[i * 8 + 5] = (float)(y + 1) + 0.5;
-      out[i * 8 + 6] = (float)x + 0.5;
-      out[i * 8 + 7] = map(threshold, a, c) + (float)y + 0.5;
-    } else {
-      // same as 7
-      out[i * 8 + 0] = map(threshold, a, b) + (float)x + 0.5;
-      out[i * 8 + 1] = (float)y + 0.5;
-      out[i * 8 + 2] = (float)x + 0.5;
-      out[i * 8 + 3] = map(threshold, a, c) + (float)y + 0.5;
-
-      // same as 14
-      out[i * 8 + 4] = map(threshold, c, d) + (float)x + 0.5;
-      out[i * 8 + 5] = (float)(y + 1) + 0.5;
-      out[i * 8 + 6] = (float)(x + 1) + 0.5;
-      out[i * 8 + 7] = map(threshold, b, d) + (float)y + 0.5;
-    }
-    break;
-  case 7:
-    out[i * 8 + 0] = map(threshold, a, b) + (float)x + 0.5;
-    out[i * 8 + 1] = (float)y + 0.5;
-    out[i * 8 + 2] = (float)x + 0.5;
-    out[i * 8 + 3] = map(threshold, a, c) + (float)y + 0.5;
-    break;
-  case 8:
-    out[i * 8 + 0] = (float)x + 0.5;
-    out[i * 8 + 1] = map(threshold, a, c) + (float)y + 0.5;
-    out[i * 8 + 2] = map(threshold, a, b) + (float)x + 0.5;
-    out[i * 8 + 3] = (float)y + 0.5;
-    break;
-  case 9:
-    if (m < threshold) {
-      // same as 8
-      out[i * 8 + 0] = (float)x + 0.5;
-      out[i * 8 + 1] = map(threshold, a, c) + (float)y + 0.5;
-      out[i * 8 + 2] = map(threshold, a, b) + (float)x + 0.5;
-      out[i * 8 + 3] = (float)y + 0.5;
-
-      // same as 1
-      out[i * 8 + 4] = (float)(x + 1) + 0.5;
-      out[i * 8 + 5] = map(threshold, b, d) + (float)y + 0.5;
-      out[i * 8 + 6] = map(threshold, c, d) + (float)x + 0.5;
-      out[i * 8 + 7] = (float)(y + 1) + 0.5;
-    } else {
-      // same as 11
-      out[i * 8 + 0] = (float)(x + 1) + 0.5;
-      out[i * 8 + 1] = map(threshold, b, d) + (float)y + 0.5;
-      out[i * 8 + 2] = map(threshold, a, b) + (float)x + 0.5;
-      out[i * 8 + 3] = (float)y + 0.5;
-
-      // same as 13
-      out[i * 8 + 4] = (float)x + 0.5;
-      out[i * 8 + 5] = map(threshold, a, c) + (float)y + 0.5;
-      out[i * 8 + 6] = map(threshold, c, d) + (float)x + 0.5;
-      out[i * 8 + 7] = (float)(y + 1) + 0.5;
-    }
-    break;
-  case 10:
-    out[i * 8 + 0] = map(threshold, c, d) + (float)x + 0.5;
-    out[i * 8 + 1] = (float)(y + 1) + 0.5;
-    out[i * 8 + 2] = map(threshold, a, b) + (float)x + 0.5;
-    out[i * 8 + 3] = (float)y + 0.5;
-    break;
-  case 11:
-    out[i * 8 + 0] = (float)(x + 1) + 0.5;
-    out[i * 8 + 1] = map(threshold, b, d) + (float)y + 0.5;
-    out[i * 8 + 2] = map(threshold, a, b) + (float)x + 0.5;
-    out[i * 8 + 3] = (float)y + 0.5;
-    break;
-  case 12:
-    out[i * 8 + 0] = (float)x + 0.5;
-    out[i * 8 + 1] = map(threshold, a, c) + (float)y + 0.5;
-    out[i * 8 + 2] = (float)(x + 1) + 0.5;
-    out[i * 8 + 3] = map(threshold, b, d) + (float)y + 0.5;
-    break;
-  case 13:
-    out[i * 8 + 0] = (float)x + 0.5;
-    out[i * 8 + 1] = map(threshold, a, c) + (float)y + 0.5;
-    out[i * 8 + 2] = map(threshold, c, d) + (float)x + 0.5;
-    out[i * 8 + 3] = (float)(y + 1) + 0.5;
-    break;
-  case 14:
-    out[i * 8 + 0] = map(threshold, c, d) + (float)x + 0.5;
-    out[i * 8 + 1] = (float)(y + 1) + 0.5;
-    out[i * 8 + 2] = (float)(x + 1) + 0.5;
-    out[i * 8 + 3] = map(threshold, b, d) + (float)y + 0.5;
-    break;
-  }
+  out[i * 8 + 0] = vertices[vertex_lut[center][configuration][0]].x;
+  out[i * 8 + 1] = vertices[vertex_lut[center][configuration][0]].y;
+  out[i * 8 + 2] = vertices[vertex_lut[center][configuration][1]].x;
+  out[i * 8 + 3] = vertices[vertex_lut[center][configuration][1]].y;
+  out[i * 8 + 4] = vertices[vertex_lut[center][configuration][2]].x;
+  out[i * 8 + 5] = vertices[vertex_lut[center][configuration][2]].y;
+  out[i * 8 + 6] = vertices[vertex_lut[center][configuration][3]].x;
+  out[i * 8 + 7] = vertices[vertex_lut[center][configuration][3]].y;
 }
 }
