@@ -4,7 +4,7 @@
 (defn default-headers
   "Returns the set of default headers to include when compiling a CUDA program."
   []
-  {"Nvidia/helper_math.h" (slurp (io/resource "vendor/helper_math.h"))})
+  {"helper_math.h" (slurp (io/resource "vendor/helper_math.h"))})
 
 (defn default-nvcc-args
   "Returns a list of default compiler args."

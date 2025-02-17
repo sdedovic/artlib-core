@@ -1,4 +1,4 @@
-#include "Nvidia/helper_math.h"
+#include <helper_math.h>
 
 extern "C" {
 __global__ void threshold_f(float *heightmap, int *out, int width, int height,
