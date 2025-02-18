@@ -2,12 +2,12 @@
   (:refer-clojure :exclude [name])
   (:require [artlib.acceleration.core :as accel]
             [artlib.cuda.contour :as contour-kernel]
-            [clojure.pprint :refer [pprint]]
             [uncomplicate.clojurecuda.core :as cuda]
             [uncomplicate.commons.core :refer [info with-release]]
-            [uncomplicate.clojure-cpp :refer [float-pointer pointer-seq]]
+            [uncomplicate.clojure-cpp :refer [float-pointer int-pointer pointer-seq] :as cpp]
             [mikera.image.core :as img])
-  (:import [java.awt.image DataBuffer]))
+  (:import [java.awt.image DataBuffer]
+           [org.bytedeco.cuda.global cudart]))
 
 ;; Acceleration
 
@@ -52,30 +52,39 @@
                                     ;; NOTE: output is one or two line segments, i.e. [[x1 y1] [x2 y2] ...] which 
                                     ;;   means it requires, at worst, 8 floats to store, 4 per line segment
                                     :polygon-buffer
-                                    (cuda/mem-alloc-driver (* num-cells 8 Float/BYTES))}))
+                                    (cuda/mem-alloc-driver (* num-cells 8 Float/BYTES))
+                                    
+                                    ;; atomic counter
+                                    :segment-counter
+                                    (cuda/mem-alloc-driver Integer/BYTES)}))
 
             (let [{pixel-buffer :pixel-buffer 
-                   polygon-buffer :polygon-buffer} @buffers-atom]
+                   polygon-buffer :polygon-buffer
+                   segment-counter :segment-counter} @buffers-atom]
               (cuda/memcpy-host! pixels pixel-buffer)
               (let [result (->> [threshold]
                                 flatten
                                 (map (fn [threshold]
+                                       (cuda/memcpy-host! 0 segment-counter) ;; reset counter
                                        (contour-kernel/calculate-line-segments module 
                                                                                pixel-buffer polygon-buffer 
-                                                                               (dec width) (dec height) 
+                                                                               segment-counter
+                                                                               width height 
                                                                                threshold)
-                                       (with-release [polygon-pointer (float-pointer (* num-cells 8))]
-                                         (cuda/memcpy-host! polygon-buffer polygon-pointer)
-                                         (->> (pointer-seq polygon-pointer)
-                                              (partition 2)
-                                              (map vec)
-                                              (partition 2)
-                                              (map vec)
-                                              (filter #(every? (complement zero?) (flatten %)))
-
-                                              ;; this is required to consume the data otherwise it will
-                                              ;;  be released when returning the sequence
-                                              doall))))
+                                       (with-release [counter-ptr (int-pointer 1)]
+                                         (cuda/memcpy-host! segment-counter counter-ptr)
+                                         (let [num-segments (cpp/get-entry counter-ptr)]
+                                           (with-release [polygon-ptr (float-pointer (* num-segments 4))]
+                                             (cuda/memcpy-host! polygon-buffer polygon-ptr)
+                                             (let [segments (->> (pointer-seq polygon-ptr)
+                                                                 (partition 2)
+                                                                 (map vec)
+                                                                 (partition 2)
+                                                                 (map vec)
+                                                                 ;; this is required to consume the data otherwise it will
+                                                                 ;;  be released when returning the sequence
+                                                                 doall)]
+                                               (with-meta segments {:threshold threshold})))))))
                                 doall)]
                 (if (sequential? threshold)
                   result

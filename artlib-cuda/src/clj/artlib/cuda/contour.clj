@@ -24,9 +24,9 @@
       (cuda/parameters heightmap out (int width) (int height) (float threshold)))))
 
 (defn calculate-line-segments
-  [module heightmap out width height threshold]
+  [module heightmap out segment-count width height threshold]
   (with-release [kernel (cuda/function module "calculate_line_segments")]
     (cuda/launch!
       kernel
       (cuda/grid-2d width height)
-      (cuda/parameters heightmap out (int width) (int height) (float threshold)))))
+      (cuda/parameters heightmap out segment-count (int width) (int height) (float threshold)))))

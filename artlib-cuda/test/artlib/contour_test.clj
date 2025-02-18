@@ -28,8 +28,24 @@
         (is (pos? (count (acceleration/compute-contour-lines accel gray-32f 0.5))))
         (is (= 3 (count (acceleration/compute-contour-lines accel gray-32f [0.2 0.5 0.7]))))))
 
-
     (testing "sample cases"
+      (testing "have metadata"
+        (let [heightmap (make-gray-32f 3 3)]
+          (imagez/set-pixels heightmap (into-array Float/TYPE [0 0 0
+                                                               0 1 0
+                                                               0 0 0]))
+          (testing "from single threshold"
+            (let [output (acceleration/compute-contour-lines accel heightmap 0.5)]
+              (is (some? (meta output)))
+              (is (some? (:threshold (meta output))))
+              (is (= (:threshold (meta output)) 0.5))))
+
+          (testing "from seq of thresholds"
+            (let [output (acceleration/compute-contour-lines accel heightmap [0.2 0.5 0.8])]
+              (is (every? #(some? (meta %)) output))
+              (is (every? #(some? (:threshold (meta %))) output))
+              (is (= [0.2 0.5 0.8] (mapv #(:threshold (meta %)) output)))))))
+
       (testing "3x3 with center pixel high"
         (let [heightmap (make-gray-32f 3 3)]
           (imagez/set-pixels heightmap (into-array Float/TYPE [0 0 0 
