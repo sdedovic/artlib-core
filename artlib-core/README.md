@@ -1,10 +1,6 @@
 # artlib-core
 [![Clojars Project](https://img.shields.io/clojars/v/com.dedovic/artlib-core.svg)](https://clojars.org/com.dedovic/artlib-core)
 
-A Clojure library for creating computational artwork. Inspired by [thobbs/genartlib](https://github.com/thobbs/genartlib) and created as a supplement.
-
-Very expiremental. See also [artlib-cuda](https://github.com/sdedovic/artlib-cuda).
-
 ## Contents 
 ### 3d
 - **`3d.native`** - 3D projection a la OpenGL and GLM. Backed by `vectorz-clj` and runs on the CPU

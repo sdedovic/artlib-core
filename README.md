@@ -1,5 +1,6 @@
 # artlib
 [![Clojars Project](https://img.shields.io/clojars/v/com.dedovic/artlib-core.svg)](https://clojars.org/com.dedovic/artlib-core)
+</br>
 [![Clojars Project](https://img.shields.io/clojars/v/com.dedovic/artlib-cuda.svg)](https://clojars.org/com.dedovic/artlib-cuda)
 
 Monorepo for generative / computation art tooling in Clojure.
