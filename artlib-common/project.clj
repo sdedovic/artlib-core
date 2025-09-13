@@ -2,6 +2,9 @@
   :description "Utilities for making generative art"
   :monolith/inherit true
 
+  :plugins [[com.dedovic/lein-version "1.0.0"]]
+  :middleware [lein-version.plugin/middleware]
+
   :dependencies [[org.clojure/clojure :scope "provided"]]
 
   :source-paths ["src/clj"]

@@ -1,8 +1,8 @@
 (defproject com.dedovic/artlib-parent "0.0.18-SNAPSHOT"
   :plugins [[lein-changelog "0.3.2"]
             [lein-pprint "1.3.2"]
-            [com.dedovic/lein-version "1.0.0"]
-            [lein-monolith "1.10.3"]]
+            [lein-monolith "1.10.3"]
+            [com.dedovic/lein-version "1.0.0"]]
 
   :middleware [lein-version.plugin/middleware]
 
