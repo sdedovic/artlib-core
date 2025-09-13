@@ -45,11 +45,11 @@
 
   :release-tasks [;; 1 - tests
                   ["vcs" "assert-committed"]
-                  ["modules" "test"]
+                  ["monolith" "each" "test"]
 
                   ;; 2 - bump versions and update changelog sections
                   ["change" "version" "leiningen.release/bump-version" "release"]
-                  ["modules" "change" "version" "leiningen.release/bump-version" "release"]
+                  ["monolith" "each" "change" "version" "leiningen.release/bump-version" "release"]
                   ["changelog" "release"]
 
                   ;; 3 - commit changes
@@ -57,11 +57,11 @@
                   ["vcs" "tag" "--no-sign"]                 ;; TODO: start signing things
 
                   ;; 4 - deploy to clojars
-                  ["modules" "with-profile" "inherited" "deploy"]
+                  ["monolith" "each" "deploy"]
 
                   ;; 5 - bump version for new dev cycle and push
                   ["change" "version" "leiningen.release/bump-version"]
-                  ["modules" "change" "version" "leiningen.release/bump-version"]
+                  ["monolith" "each" "change" "version" "leiningen.release/bump-version"]
                   ["vcs" "commit"]
                   ["vcs" "push"]]
 
