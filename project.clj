@@ -1,12 +1,16 @@
 (defproject com.dedovic/artlib-parent "0.0.18-SNAPSHOT"
   :plugins [[lein-changelog "0.3.2"]
             [lein-pprint "1.3.2"]
+            [com.dedovic/lein-version "1.0.0"]
             [lein-monolith "1.10.3"]]
 
-  :monolith {:inherit [:url :license :deploy-repositories :release-tasks]
+  :middleware [lein-version.plugin/middleware]
+
+  :monolith {:inherit 
+             [:url :license :deploy-repositories :release-tasks]
 
              :inherit-leaky 
-             [:repositories :managed-dependencies]
+             [:repositories :license :managed-dependencies]
              
              :project-dirs 
              ["artlib-core" "artlib-cuda" "artlib-common"]}
@@ -19,16 +23,15 @@
                                       :url           "https://clojars.org/repo"
                                       :username      :env/clojars_user
                                       :password      :env/clojars_token}]]
-  ;:pom-location "target/"
 
   :managed-dependencies [[org.clojure/clojure "1.12.0"]
                          [org.clojure/core.match "1.0.0"]
                          [net.mikera/core.matrix "0.63.0"]
 
                          ;; this
-                         [com.dedovic/artlib-core "0.0.18-SNAPSHOT"]
-                         [com.dedovic/artlib-common "0.0.18-SNAPSHOT"]
-                         [com.dedovic/artlib-cuda "0.0.18-SNAPSHOT"]
+                         [com.dedovic/artlib-core :version]
+                         [com.dedovic/artlib-common :version]
+                         [com.dedovic/artlib-cuda :version]
 
                          ; progress bar
                          [progrock "0.1.2"]
