@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.0.18] — 2025-09-13
 ### Changed
 - reworked project structure to support subprojects / modules
 
@@ -46,4 +48,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.1.0]: https://github.com/sdedovic/artlib-core/compare/0.0.16...0.1.0
 [0.1.0]: https://github.com/sdedovic/artlib-core/compare/0.1.0...0.1.0
 [0.0.17]: https://github.com/sdedovic/artlib-core/compare/0.1.0...0.0.17
-[Unreleased]: https://github.com/sdedovic/artlib-core/compare/0.0.17...HEAD
+[0.0.18]: https://github.com/sdedovic/artlib-core/compare/0.0.17...0.0.18
+[Unreleased]: https://github.com/sdedovic/artlib-core/compare/0.0.18...HEAD
