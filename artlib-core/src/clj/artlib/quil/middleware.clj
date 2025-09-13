@@ -68,7 +68,7 @@
             (with-style
               (q/fill 0 0 100)
               (q/no-stroke)
-              (q/rect 50 0 50 50)
+              (q/rect 0 0 100 50)
               (q/fill 0 0 0)
               (q/stroke 0 0 0)
               (q/text (format "%-7s %9d" "Frame" frame) 5 13)
