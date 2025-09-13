@@ -1,6 +1,6 @@
 (defproject com.dedovic/artlib-core "0.0.18-SNAPSHOT"
   :description "Utilities for making generative art"
-  :plugins [[com.dedovic/lein-modules-new-profiles "0.3.16"]]
+  :monolith/inherit true
   :dependencies [[org.clojure/clojure :scope "provided"]
                  [com.dedovic/artlib-common]
 
