@@ -1,4 +1,4 @@
-(defproject com.dedovic/artlib-common "0.0.18"
+(defproject com.dedovic/artlib-common "0.0.19-SNAPSHOT"
   :description "Utilities for making generative art"
   :monolith/inherit true
 

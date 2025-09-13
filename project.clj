@@ -1,4 +1,4 @@
-(defproject com.dedovic/artlib-parent "0.0.18"
+(defproject com.dedovic/artlib-parent "0.0.19-SNAPSHOT"
   :plugins [[lein-changelog "0.3.2"]
             [lein-pprint "1.3.2"]
             [lein-monolith "1.10.3"]
