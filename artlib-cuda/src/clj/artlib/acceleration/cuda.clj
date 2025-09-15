@@ -2,6 +2,7 @@
   (:refer-clojure :exclude [name])
   (:require [artlib.acceleration.core :as accel]
             [artlib.cuda.contour :as contour-kernel]
+            [artlib.cuda.noise :as noise-kernel]
             [uncomplicate.clojurecuda.core :as cuda]
             [uncomplicate.commons.core :refer [info with-release]]
             [uncomplicate.clojure-cpp :refer [float-pointer int-pointer pointer-seq] :as cpp]
@@ -88,17 +89,45 @@
                                 doall)]
                 (if (sequential? threshold)
                   result
-                  (first result))))))))))
+                  (first result)))))))))
+
+  accel/NoiseHelper
+  (noise2
+    [this resolution opts]
+    (let [[width height] resolution
+          {scale :scale offset :offset} opts
+
+          module (get-in this [:modules ::noise :module])
+          buffers-atom (get-in this [:modules ::noise :buffers])
+          size (* width height)]
+      (cuda/in-context
+       (:ctx this)
+
+       (when (or (nil? @buffers-atom)
+                 (> size (:capacity @buffers-atom)))
+         (reset! buffers-atom {:capacity size
+
+                               :noise-buffer
+                               (cuda/mem-alloc-driver (* size Float/BYTES))}))
+
+       (let [{noise-buffer :noise-buffer} @buffers-atom]
+         (noise-kernel/noise-2d module noise-buffer {:resolution resolution :scale scale :offset offset})
+         (with-release [noise-ptr (float-pointer size)]
+                       (cuda/memcpy-host! noise-buffer noise-ptr)
+                       (doall (pointer-seq noise-ptr))))))))
 
 (defn new-cuda-acceleration [device]
   (let [ctx (cuda/context device)
         modules {::contour 
                  {:module (contour-kernel/create-module ctx)
+                  :buffers (atom nil)}
+
+                 ::noise
+                 {:module (noise-kernel/create-module ctx)
                   :buffers (atom nil)}}]
     (->CudaAcceleration device ctx modules)))
 
 ;; Acceleration Provider
-
 (defrecord CudaAccelerationProvider []
   :load-ns true
 
