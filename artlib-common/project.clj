@@ -7,6 +7,10 @@
 
   :dependencies [[org.clojure/clojure :scope "provided"]]
 
+  :profiles {:test
+             {:dependencies
+              [[net.mikera/imagez "0.12.0"]] }}
+
   :source-paths ["src/clj"]
   :test-paths ["test/clj"]
 

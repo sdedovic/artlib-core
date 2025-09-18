@@ -41,8 +41,13 @@
 
   (noise2
     [this resolution opts]
-    "Compute 2D noise and return a vec of vec of values. The parameters are as follows:
+    "Compute 2D noise and return a vec of values. The parameters are as follows:
       resolution [x y] - the size of the generated noise image in pixels
       opts { [x y] :scale [x y] :offset } - noise generation options
       scale [x y] - the scale of the noise, default is [1.0 1.0]
-      offset [x y] - the noise offset, default is [0.0 0.0]"))
+      offset [x y] - the noise offset, default is [0.0 0.0]")
+
+  (noised2
+    [this resolution opts]
+    "Compute 2D noise and and its analytical derrivative, returning a seq. See `noise2` for parameter documentation. The
+     resulting seq is packed [value-1 derrivative-x-1 derrivative-y-1 ... value-n derrivative-x-n derrivative-y-n"))

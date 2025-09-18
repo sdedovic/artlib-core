@@ -1,7 +1,7 @@
 (ns artlib.noise-test
   (:require [artlib.acceleration.core :as acceleration]
             [artlib.cuda.noise :as noise]
-            [artlib.image.core :refer [make-rgb-32f make-gray-32f]]
+            [artlib.image.core :refer [make-rgb-32f convert-f32-to-int-rgb]]
             [mikera.image.core :as imagez]
             [clojure.test :refer :all])
   (:import [java.awt.image BufferedImage]))
@@ -16,40 +16,21 @@
     (testing "basic execution flow"
       (let [out (acceleration/noise2 accel [5 5] {:scale [0.2 0.2] :offset [1.35 7.23]})]
         (is (some? out))
-        (println out)
-        ))
+        (is (seq? out))
+        (is (= (count out) 25))
+        (is (every? (complement zero?) out)))
 
-    #_(testing "sample cases"
-      (testing "have metadata"
-        (let [heightmap (make-gray-32f 3 3)]
-          (imagez/set-pixels heightmap (into-array Float/TYPE [0 0 0
-                                                               0 1 0
-                                                               0 0 0]))
-          (testing "from single threshold"
-            (let [output (acceleration/compute-contour-lines accel heightmap 0.5)]
-              (is (some? (meta output)))
-              (is (some? (:threshold (meta output))))
-              (is (= (:threshold (meta output)) 0.5))))
+      (let [out (acceleration/noised2 accel [2 2] {:scale [0.2 0.2] :offset [1.35 7.23]})]
+        (is (some? out))
+        (is (seq? out))
+        (is (= (count out) 12))
+        (is (every? (complement zero?) out))))
 
-          (testing "from seq of thresholds"
-            (let [output (acceleration/compute-contour-lines accel heightmap [0.2 0.5 0.8])]
-              (is (every? #(some? (meta %)) output))
-              (is (every? #(some? (:threshold (meta %))) output))
-              (is (= [0.2 0.5 0.8] (mapv #(:threshold (meta %)) output)))))))
-
-      (testing "3x3 with center pixel high"
-        (let [heightmap (make-gray-32f 3 3)]
-          (imagez/set-pixels heightmap (into-array Float/TYPE [0 0 0 
-                                                               0 1 0 
-                                                               0 0 0]))
-          (let [output (acceleration/compute-contour-lines accel heightmap 0.5)]
-            (is (some? output))
-            (is (pos? (count output)))
-            (is (= 4 (count output)))
-            (is (= output
-                   '([[1.0 1.5] [1.5 1.0]] 
-                     [[1.5 1.0] [2.0 1.5]] 
-                     [[1.5 2.0] [1.0 1.5]] 
-                     [[2.0 1.5] [1.5 2.0]])))))))
-
-    ))
+    (testing "basic image creation"
+      (let [dims [1920 1920]
+            [width height] dims
+            image (make-rgb-32f width height)
+            out (acceleration/noised2 accel dims {:scale [2 2] :offset [0 0]})
+            as-array (into-array Float/TYPE out)]
+        (imagez/set-pixels image as-array)
+        (imagez/save (convert-f32-to-int-rgb image) "test.png")))))
